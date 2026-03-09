@@ -31,6 +31,11 @@ build_tools:
   - bison
   - flex
   - ninja-build
+  - ccache
+  - mold
+  - cgdb
+  - linux-perf
+  - hyperfine
 
 # ──────────────────────────────────────────────
 # Languages & runtimes
@@ -187,6 +192,21 @@ cli_tools:
   - just
   - pipx
   - poetry
+  - eza
+  - zoxide
+  - tealdeer
+  - git-delta
+  - direnv
+  - tmuxinator
+  - httpie
+  - tcpdump
+  - nmap
+  - ipcalc
+  - iperf3
+  - iftop
+  - nethogs
+  - traceroute
+  - telnet
 
 # ──────────────────────────────────────────────
 # Fun / community
@@ -219,3 +239,5 @@ system_tools:
   - iotop # I/O monitoring
   - fastfetch # modern system info (replaces neofetch)
   - goaccess # web log analyzer
+  - sysstat # system performance tools
+  - glances # cross-platform system monitoring
