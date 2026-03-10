@@ -16,7 +16,6 @@ tilde_docroot: public_html
 
 
 gemini_port: 1965
-gemini_user: _gmid
 gemini_capsule_root: /var/gemini
 
 gopher_port: 70

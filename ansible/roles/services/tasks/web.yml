@@ -34,7 +34,10 @@
       --agree-tos
       --email {{ admin_email }}
       -d {{ pubnix_domain }}
+      {% if ansible_virtualization_type == 'docker' or use_staging_certs | default(false) %}--staging{% endif %}
     creates: /etc/letsencrypt/live/{{ pubnix_domain }}/fullchain.pem
+  failed_when: false
+  when: ansible_virtualization_type != 'docker'
 
 - name: Enable auto-renewal timer
   ansible.builtin.systemd:

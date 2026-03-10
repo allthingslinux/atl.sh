@@ -59,6 +59,7 @@
     name: acct
     enabled: true
     state: started
+  failed_when: false
 
 - name: Add available shells to /etc/shells
   ansible.builtin.lineinfile:

@@ -4,12 +4,18 @@
     name: prometheus-node-exporter
     state: present
 
+- name: Create systemd override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/prometheus-node-exporter.service.d
+    state: directory
+    mode: '0755'
+
 - name: Deploy node_exporter systemd override
   ansible.builtin.template:
     src: node_exporter.service.j2
     dest: /etc/systemd/system/prometheus-node-exporter.service.d/override.conf
     mode: "0644"
-  notify: restart node_exporter
+  notify: Restart node_exporter
 
 - name: Enable node_exporter
   ansible.builtin.systemd:

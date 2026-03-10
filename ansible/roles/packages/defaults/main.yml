@@ -60,9 +60,6 @@ languages:
   - default-jre
   - elixir
   - erlang
-  - yarn
-  - pnpm
-  - deno
   - gnat
   - gfortran
   - gobjc
@@ -170,7 +167,6 @@ cli_tools:
   - mc
   - ranger
   - lf
-  - yazi
   - bat
   - tig
   - lazygit
@@ -191,7 +187,6 @@ cli_tools:
   - universal-ctags
   - just
   - pipx
-  - poetry
   - eza
   - zoxide
   - tealdeer
@@ -231,7 +226,7 @@ fun_packages:
 system_tools:
   - acct # process accounting (sa, lastcomm)
   - quota # disk quota tools
-  - mlocate # locate files
+  - plocate # locate files (replaces mlocate)
   - man-db
   - info
   - bash-completion

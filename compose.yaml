@@ -1,17 +1,36 @@
+name: atl-sh
+
 services:
-  atl-sh-dev:
+  dev:
     build:
       context: .
       dockerfile: Containerfile
     container_name: atl-sh-dev
     hostname: atl-sh-dev
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    cgroup: host
+    mem_limit: 4g
+    mem_reservation: 2g
+    cpus: 4
+    pids_limit: 2048
+    tmpfs:
+      - /run
+      - /run/lock
+      - /tmp
     volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
       - ./ansible:/ansible:ro
     ports:
       - "2222:22"
     networks:
-      - atl-sh-dev-net
+      - dev-net
+    command: /sbin/init
+    stop_signal: SIGRTMIN+3
+    stop_grace_period: 30s
 
 networks:
-  atl-sh-dev-net:
+  dev-net:
     driver: bridge

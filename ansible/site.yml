@@ -3,7 +3,7 @@
 # Usage: ansible-playbook site.yml [--tags common,ssh,web]
 
 - name: Configure atl.sh pubnix server
-  hosts: pubnix
+  hosts: dev
   become: true
 
   roles:

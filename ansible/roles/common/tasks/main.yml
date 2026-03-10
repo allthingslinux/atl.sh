@@ -21,10 +21,10 @@
     regexp: '^#?SystemMaxUse='
     line: 'SystemMaxUse=1G'
     state: present
-  notify: restart journald
+  notify: Restart journald
 
 - name: Apply robertdebock.logrotate role
   ansible.builtin.include_role:
     name: robertdebock.logrotate
   vars:
-    logrotate_entries: "{{ logrotate_entries | default([]) }}"
+    logrotate_entries: "{{ common_logrotate_entries | default([]) }}"

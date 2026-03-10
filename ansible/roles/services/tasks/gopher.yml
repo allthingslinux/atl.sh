@@ -15,10 +15,10 @@
     src: gophernicus.env.j2
     dest: /etc/default/gophernicus
     mode: "0644"
-  notify: restart gophernicus
+  notify: Restart gophernicus
 
-- name: Enable gophernicus
+- name: Enable gophernicus socket
   ansible.builtin.systemd:
-    name: gophernicus
+    name: gophernicus.socket
     enabled: true
     state: started

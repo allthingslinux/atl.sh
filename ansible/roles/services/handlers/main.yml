@@ -8,10 +8,12 @@
   ansible.builtin.service:
     name: nginx
     state: restarted
-- name: Restart gmid
+
+- name: Restart molly-brown
   ansible.builtin.systemd:
-    name: gmid
+    name: molly-brown@molly-brown
     state: restarted
+
 - name: Restart gophernicus
   ansible.builtin.systemd:
     name: gophernicus

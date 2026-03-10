@@ -1,32 +1,47 @@
 ---
-- name: Install gmid
+- name: Install molly-brown
   ansible.builtin.apt:
-    name: gmid
+    name: molly-brown
     state: present
-
-- name: Create gmid user
-  ansible.builtin.user:
-    name: "{{ gemini_user }}"
-    system: true
-    shell: /usr/sbin/nologin
-    create_home: false
 
 - name: Create capsule root
   ansible.builtin.file:
     path: "{{ gemini_capsule_root }}"
     state: directory
-    owner: "{{ gemini_user }}"
     mode: "0755"
 
-- name: Deploy gmid config
-  ansible.builtin.template:
-    src: gmid.conf.j2
-    dest: /etc/gmid.conf
-    mode: "0644"
-  notify: restart gmid
+- name: Create log directory
+  ansible.builtin.file:
+    path: /var/log/molly-brown
+    state: directory
+    owner: molly-brown
+    group: molly-brown
+    mode: '0755'
 
-- name: Enable gmid service
+- name: Check if SSL certs exist
+  ansible.builtin.stat:
+    path: /etc/letsencrypt/live/{{ pubnix_domain }}/fullchain.pem
+  register: ssl_cert
+
+- name: Generate self-signed cert for dev
+  ansible.builtin.command:
+    cmd: >
+      openssl req -x509 -newkey rsa:4096 -nodes
+      -keyout /etc/ssl/private/molly-brown.key
+      -out /etc/ssl/certs/molly-brown.crt
+      -days 365 -subj "/CN={{ pubnix_domain }}"
+    creates: /etc/ssl/certs/molly-brown.crt
+  when: not ssl_cert.stat.exists
+
+- name: Deploy molly-brown config
+  ansible.builtin.template:
+    src: molly-brown.ini.j2
+    dest: /etc/molly-brown/molly-brown.conf
+    mode: "0644"
+  notify: Restart molly-brown
+
+- name: Enable molly-brown service
   ansible.builtin.systemd:
-    name: gmid
+    name: molly-brown@molly-brown
     enabled: true
     state: started
