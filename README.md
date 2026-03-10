@@ -29,10 +29,12 @@ atl.sh is a shared system providing shell access, web hosting, and alternative p
 
 The system implements multiple layers of protection to ensure stability for all users:
 
+- **CIS Hardening**: Implements CIS Level 2 benchmark controls including kernel hardening (ASLR, ptrace restrictions), network protections (SYN cookies, anti-spoofing), and module blacklisting.
 - **Resource Limits**: systemd user slices enforce kernel-level caps on CPU, memory, and process count per user.
 - **Hardened /tmp**: User-specific temporary directories are mounted as `tmpfs` with `nodev`, `nosuid`, and `noexec` options.
 - **Quotas**: User and group filesystem quotas are enforced on the root partition.
-- **Network**: SSH is rate-limited and protected by Fail2ban.
+- **Network**: SSH is rate-limited and protected by Fail2ban with strong cryptographic ciphers.
+- **Monitoring**: AIDE file integrity monitoring, enhanced auditd logging, and automatic security updates.
 
 ## Deployment
 
