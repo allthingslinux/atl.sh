@@ -11,49 +11,48 @@ atl.sh is a single-server pubnix managed by Ansible.
 
 ## Deployment
 
+This project uses [just](https://github.com/casey/just). Run `just` to list commands.
+
 ### Initial Setup
 
 ```bash
-# 1. Provision infrastructure
-cd terraform
-cp terraform.tfvars.example terraform.tfvars
+# 1. Provision infrastructure (staging VPS)
+cp terraform/terraform.tfvars.example terraform/terraform.tfvars
 # Fill in secrets
-terraform init && terraform apply
+just tf-init && just tf-apply
 
 # 2. Install dependencies and hooks
-cd ..
-ansible-galaxy install -r requirements.yml
+just install
 pre-commit install
 
 # 3. Configure the server
-cd ansible
-ansible-playbook site.yml
+just deploy staging   # or: deploy prod for physical server
 ```
+
+### Environments
+
+| Target   | Hostname            | Host (env override)     |
+|----------|---------------------|-------------------------|
+| dev      | atl-sh-dev          | 127.0.0.1:2222          |
+| staging  | atl-pubnix-staging  | STAGING_HOST / staging.atl.sh |
+| prod     | atl-pubnix          | PROD_HOST / atl.sh      |
 
 ### User Management
 
 ```bash
-# Create user (triggered by portal)
-ansible-playbook playbooks/create-user.yml \
-  -e "username=johndoe" \
-  -e "ssh_public_key='ssh-ed25519 AAAA...'"
+# Create user (target: staging or prod)
+just create-user johndoe 'ssh-ed25519 AAAA...' staging
 
-# Remove user (triggered by portal)
-ansible-playbook playbooks/remove-user.yml \
-  -e "username=johndoe"
+# Remove user
+just remove-user johndoe prod
 ```
 
 ### Selective Runs
 
 ```bash
-# Only update security (SSH, Firewall)
-ansible-playbook site.yml --tags security
-
-# Only update user-facing services (Web, Gemini, Gopher)
-ansible-playbook site.yml --tags services
-
-# Update environment hardening (systemd limits, tmpfs)
-ansible-playbook site.yml --tags environment
+just deploy-tag staging security     # SSH, Firewall on staging
+just deploy-tag prod services        # Web, Gemini, Gopher on prod
+just deploy-tag prod environment     # systemd limits, tmpfs
 ```
 
 ## Roles
@@ -83,9 +82,8 @@ The system uses a hybrid approach to maintain performance and visibility:
 All secrets are stored in `ansible/inventory/group_vars/all/vault.yml` and encrypted with Ansible Vault.
 
 ```bash
-# Edit vault
-ansible-vault edit ansible/inventory/group_vars/all/vault.yml
+just vault-edit
 
 # Run playbook with vault
-ansible-playbook site.yml --ask-vault-pass
+cd ansible && ansible-playbook site.yml --ask-vault-pass
 ```

@@ -9,6 +9,7 @@ terraform/.terraform.tfstate.lock.info
 # Ansible
 ansible/*.retry
 ansible/inventory/group_vars/all/vault.yml
+ansible/collections
 
 # References (research material, not part of the project)
 references

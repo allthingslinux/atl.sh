@@ -40,17 +40,35 @@ The system implements multiple layers of protection to ensure stability for all 
 
 ## Development
 
-### Local Development Environment
+This project uses [just](https://github.com/casey/just) for common tasks. Run `just` to list commands.
 
-A Docker-based development environment is provided for testing Ansible playbooks locally:
+### Prerequisites
+
+- [just](https://github.com/casey/just) — command runner
+- Docker (for local dev)
+- Ansible, Terraform
+
+Install Ansible collections and roles:
 
 ```bash
-# Start development container
-docker compose up -d
+just install
+```
 
-# Run Ansible playbook against dev container
-cd ansible
-ansible-playbook -i inventory/dev.ini site.yml --skip-tags security,env
+### Environments
+
+| Target   | Host                  | Description                    |
+|----------|-----------------------|--------------------------------|
+| `dev`    | atl-sh-dev            | Local Docker container         |
+| `staging`| atl-pubnix-staging    | Terraform Hetzner Cloud VPS    |
+| `prod`   | atl-pubnix            | Physical Hetzner server        |
+
+### Local Development Environment
+
+A Docker-based development environment for testing Ansible playbooks locally:
+
+```bash
+just dev-up
+just deploy dev
 
 # SSH into dev container
 ssh -p 2222 -i .ssh/dev_key root@localhost
@@ -62,41 +80,31 @@ The development container:
 - Mounts Ansible playbooks read-only for testing
 - Skips security hardening (sysctl) and quotas (not supported in containers)
 
-### Prerequisites
-
-Install necessary Ansible collections:
-```bash
-ansible-galaxy install -r requirements.yml
-```
-
 ## Deployment
 
 ### Infrastructure Provisioning
 
 ```bash
-cd terraform
-terraform init
-terraform apply
+just tf-init
+just tf-apply
 ```
 
 ### Configuration Management
 
 ```bash
-cd ansible
-
-# Full deployment
-ansible-playbook site.yml
+just deploy dev      # Local Docker
+just deploy staging  # Hetzner VPS (set STAGING_HOST or use staging.atl.sh)
+just deploy prod     # Physical server (set PROD_HOST or use atl.sh)
 
 # Specific roles
-ansible-playbook site.yml --tags common,packages,users
+just deploy-tag staging common,packages,users
 ```
 
 ### Quality Control
 
-Pre-commit hooks are used to maintain code quality:
 ```bash
 pre-commit install
-pre-commit run --all-files
+just lint
 ```
 
 ## Documentation
