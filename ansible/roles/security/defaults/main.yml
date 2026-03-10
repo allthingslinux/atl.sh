@@ -26,3 +26,104 @@ firewall_allowed_tcp_ports:
   - "40000:40100" # FTP Passive Data
 
 firewall_rate_limit_ssh: true
+
+auditd_rules:
+  # Self Auditing
+  - file: /var/log/audit/
+    permissions: [write, read, attribute_change]
+    keyname: auditlog
+  - file: /etc/audit/
+    permissions: [write, attribute_change]
+    keyname: auditconfig
+  - file: /sbin/auditctl
+    permissions: [execute]
+    keyname: audittools
+  - file: /usr/sbin/augenrules
+    permissions: [execute]
+    keyname: audittools
+
+  # System Integrity
+  - file: /etc/sysctl.conf
+    permissions: [write, attribute_change]
+    keyname: sysctl
+  - file: /etc/sysctl.d
+    permissions: [write, attribute_change]
+    keyname: sysctl
+  - file: /etc/modprobe.d
+    permissions: [write, attribute_change]
+    keyname: modprobe
+
+  # Identity & Authentication
+  - file: /etc/group
+    permissions: [write, attribute_change]
+    keyname: etcgroup
+  - file: /etc/passwd
+    permissions: [write, attribute_change]
+    keyname: etcpasswd
+  - file: /etc/gshadow
+    permissions: [write, attribute_change]
+    keyname: etcgroup
+  - file: /etc/shadow
+    permissions: [write, attribute_change]
+    keyname: etcpasswd
+  - file: /etc/sudoers
+    permissions: [write, attribute_change]
+    keyname: actions
+  - file: /etc/sudoers.d/
+    permissions: [write, attribute_change]
+    keyname: actions
+
+  # Network Environment
+  - file: /etc/hosts
+    permissions: [write, attribute_change]
+    keyname: network_modifications
+  - file: /etc/network/
+    permissions: [write, attribute_change]
+    keyname: network
+
+  # SSH Configuration
+  - file: /etc/ssh/sshd_config
+    permissions: [write, attribute_change]
+    keyname: sshd
+
+  # Suspicious Activity Monitoring
+  - file: /usr/bin/wget
+    permissions: [execute]
+    keyname: susp_activity
+  - file: /usr/bin/curl
+    permissions: [execute]
+    keyname: susp_activity
+  - file: /usr/bin/nc
+    permissions: [execute]
+    keyname: susp_activity
+  - file: /usr/bin/socat
+    permissions: [execute]
+    keyname: susp_activity
+  - file: /usr/bin/sudo
+    permissions: [execute]
+    keyname: priv_esc
+  - file: /usr/bin/su
+    permissions: [execute]
+    keyname: priv_esc
+
+  # System Calls - Time/Execution
+  - syscall: adjtimex
+    action: always
+    filter: exit
+    keyname: time
+  - syscall: settimeofday
+    action: always
+    filter: exit
+    keyname: time
+  - syscall: clock_settime
+    action: always
+    filter: exit
+    keyname: time
+  - syscall: ptrace
+    action: always
+    filter: exit
+    keyname: tracing
+  - syscall: memfd_create
+    action: always
+    filter: exit
+    keyname: anon_file_create
