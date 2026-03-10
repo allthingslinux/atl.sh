@@ -127,3 +127,58 @@ auditd_rules:
     action: always
     filter: exit
     keyname: anon_file_create
+
+  # LOLBins (Execution/LOTL) - Better to use syscalls than watches for execution
+  - syscall: execve
+    action: always
+    filter: exit
+    filters: ["path=/usr/bin/python3", "auid>=1000", "auid!=4294967295"]
+    keyname: T1059_Command_Execution
+  - syscall: execve
+    action: always
+    filter: exit
+    filters: ["path=/usr/bin/perl", "auid>=1000", "auid!=4294967295"]
+    keyname: T1059_Command_Execution
+  - syscall: execve
+    action: always
+    filter: exit
+    filters: ["path=/usr/bin/ruby", "auid>=1000", "auid!=4294967295"]
+    keyname: T1059_Command_Execution
+  - syscall: execve
+    action: always
+    filter: exit
+    filters: ["path=/usr/bin/vim", "auid>=1000", "auid!=4294967295"]
+    keyname: T1059_Command_and_Scripting_Interpreter
+
+  # Login/Session Integrity
+  - file: /var/log/lastlog
+    permissions: [write, attribute_change]
+    keyname: logins
+  - file: /var/log/faillock
+    permissions: [write, attribute_change]
+    keyname: logins
+  - file: /var/log/tallylog
+    permissions: [write, attribute_change]
+    keyname: logins
+
+  # Privileged Activity - Detailed monitoring
+  - syscall: chmod
+    action: always
+    filter: exit
+    filters: ["auid>=1000", "auid!=4294967295"]
+    keyname: perm_mod
+  - syscall: chown
+    action: always
+    filter: exit
+    filters: ["auid>=1000", "auid!=4294967295"]
+    keyname: perm_mod
+  - syscall: fchmod
+    action: always
+    filter: exit
+    filters: ["auid>=1000", "auid!=4294967295"]
+    keyname: perm_mod
+  - syscall: fchown
+    action: always
+    filter: exit
+    filters: ["auid>=1000", "auid!=4294967295"]
+    keyname: perm_mod
