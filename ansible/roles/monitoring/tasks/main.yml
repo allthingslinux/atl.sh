@@ -17,3 +17,17 @@
     enabled: true
     state: started
     daemon_reload: true
+
+- name: Enable S.M.A.R.T. monitoring daemon
+  ansible.builtin.systemd:
+    name: smartmontools
+    enabled: true
+    state: started
+  failed_when: false
+
+- name: Enable hardware sensors daemon
+  ansible.builtin.systemd:
+    name: lm-sensors
+    enabled: true
+    state: started
+  failed_when: false
