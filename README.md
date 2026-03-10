@@ -93,8 +93,8 @@ just tf-apply
 
 ```bash
 just deploy dev      # Local Docker
-just deploy staging  # Hetzner VPS (set STAGING_HOST or use staging.atl.sh)
-just deploy prod     # Physical server (set PROD_HOST or use atl.sh)
+just deploy staging  # Hetzner VPS → staging.atl.sh (set ATL_HOST to override)
+just deploy prod     # Physical server → atl.sh (set ATL_HOST to override)
 
 # Specific roles
 just deploy-tag staging common,packages,users
