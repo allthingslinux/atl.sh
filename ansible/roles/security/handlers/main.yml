@@ -8,6 +8,27 @@
   ansible.builtin.service:
     name: fail2ban
     state: restarted
+
 - name: Reload ufw
   community.general.ufw:
     state: reloaded
+
+- name: Restart auditd
+  ansible.builtin.service:
+    name: auditd
+    state: restarted
+
+- name: Update initramfs
+  ansible.builtin.command:
+    cmd: update-initramfs -u
+  changed_when: true
+
+- name: Update GRUB
+  ansible.builtin.command:
+    cmd: update-grub
+  changed_when: true
+
+- name: Restart journald
+  ansible.builtin.systemd:
+    name: systemd-journald
+    state: restarted
