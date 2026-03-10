@@ -31,6 +31,9 @@ logrotate_entries:
     frequency: daily
     keep: 14
     compress: true
+    delaycompress: true
+    dateext: true
+    maxsize: 100M
     missingok: true
     notifempty: true
     sharedscripts: true
@@ -40,6 +43,8 @@ logrotate_entries:
     frequency: weekly
     keep: 4
     compress: true
+    delaycompress: true
+    dateext: true
     missingok: true
     notifempty: true
     postrotate: "fail2ban-client flushlogs > /dev/null || true"
