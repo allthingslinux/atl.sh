@@ -9,9 +9,9 @@ variable "hcloud_token" {
 }
 
 variable "server_name" {
-  description = "Name of the test VPS"
+  description = "Name of the staging VPS (matches DNS)"
   type        = string
-  default     = "atl-pubnix-test"
+  default     = "staging.atl.sh"
 }
 
 variable "server_type" {

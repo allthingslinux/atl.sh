@@ -6,7 +6,7 @@ cloudflare_api_token = ""
 cloudflare_zone_id   = ""
 
 # Optional overrides (defaults are fine for testing)
-# server_name         = "atl-pubnix-test"
+# server_name         = "staging.atl.sh"
 # server_type         = "cx32"
 # server_location     = "fsn1"
 # server_image        = "debian-13"
