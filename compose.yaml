@@ -1,0 +1,19 @@
+services:
+  atl-sh-dev:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: atl-sh-dev
+    hostname: atl-sh-dev
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - ./ansible:/ansible:ro
+    ports:
+      - "2222:22"
+    networks:
+      - atl-sh-dev-net
+
+networks:
+  atl-sh-dev-net:
+    driver: bridge

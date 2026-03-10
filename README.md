@@ -65,3 +65,4 @@ pre-commit run --all-files
 - [User Guide](docs/user-guide.md)
 - [Admin Guide](docs/admin-guide.md)
 - [Architecture](docs/architecture.md)
+- [Testing Guide](docs/testing.md)
