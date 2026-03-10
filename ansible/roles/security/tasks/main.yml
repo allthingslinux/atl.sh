@@ -4,3 +4,12 @@
 
 - name: Import firewall tasks
   ansible.builtin.import_tasks: firewall.yml
+
+- name: Import fail2ban tasks
+  ansible.builtin.import_tasks: fail2ban.yml
+
+- name: Import malware scanners config
+  ansible.builtin.import_tasks: malware.yml
+
+- name: Import auditd setup
+  ansible.builtin.import_tasks: auditd.yml
