@@ -15,14 +15,6 @@
   ansible.builtin.include_role:
     name: geerlingguy.ntp
 
-- name: Deploy sysctl hardening
-  ansible.builtin.template:
-    src: sysctl.conf.j2
-    dest: /etc/sysctl.d/99-pubnix.conf
-    mode: "0644"
-    validate: "sysctl -p %s"
-  notify: reload sysctl
-
 - name: Configure journald caps
   ansible.builtin.lineinfile:
     path: /etc/systemd/journald.conf
