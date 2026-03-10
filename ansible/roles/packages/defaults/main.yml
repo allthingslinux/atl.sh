@@ -241,3 +241,10 @@ system_tools:
   - goaccess # web log analyzer
   - sysstat # system performance tools
   - glances # cross-platform system monitoring
+  - fail2ban
+  - lynis
+  - rkhunter
+  - chkrootkit
+  - cgroup-tools
+  - smartmontools
+  - lm-sensors
