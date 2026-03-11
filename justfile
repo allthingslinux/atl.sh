@@ -5,18 +5,53 @@
 default:
     @just --list
 
-# Install Ansible collections and roles (separate commands per Ansible docs)
 # Roles: .ansible/roles/; Collections: .ansible/collections/ansible_collections/
-# Paths use justfile_directory() so install location is correct regardless of cwd
 
 [private]
 _ansible := justfile_directory() + "/.ansible"
 [private]
 _ansible_dir := justfile_directory() + "/ansible"
 
+# Install Ansible collections and roles (run before first deploy or when requirements.yml changes)
 install:
     cd {{ _ansible_dir }} && ansible-galaxy role install -r requirements.yml -p {{ _ansible }}/roles --force
     cd {{ _ansible_dir }} && ansible-galaxy collection install -r requirements.yml -p {{ _ansible }}/collections --force
+
+# Deploy dry run (check mode; no changes)
+deploy-check target:
+    cd ansible && ansible-playbook site.yml -l "{{ target }}" --check --diff
+
+# List available tags for selective deploy
+deploy-list-tags:
+    cd ansible && ansible-playbook site.yml --list-tags
+
+# List tasks that would run (target: dev, staging, prod)
+deploy-list-tasks target:
+    cd ansible && ansible-playbook site.yml -l "{{ target }}" --list-tasks
+
+# Test SSH connectivity to target
+ping target:
+    cd ansible && ansible "{{ target }}" -m ping
+
+# Validate playbook syntax
+syntax-check:
+    cd ansible && ansible-playbook site.yml --syntax-check
+
+# List inventory hosts (target: all, dev, staging, prod)
+inventory-list target="all":
+    cd ansible && ansible-inventory -l "{{ target }}" --list
+
+# Show inventory as graph
+inventory-graph:
+    cd ansible && ansible-inventory --graph
+
+# Look up Ansible module docs (e.g. just ansible-doc copy)
+ansible-doc module:
+    ansible-doc "{{ module }}"
+
+# Show effective Ansible config
+config-dump:
+    cd ansible && ansible-config dump
 
 # Terraform — initialize backend and providers
 tf-init:
