@@ -4,6 +4,10 @@
 # Prerequisite: ssh-keygen -f .ssh/dev_key -t ed25519 -N "" (creates key pair for root SSH)
 
 Vagrant.configure("2") do |config|
+  unless File.exist?(".ssh/dev_key.pub")
+    raise "Missing .ssh/dev_key.pub. Create it with: mkdir -p .ssh && ssh-keygen -f .ssh/dev_key -t ed25519 -N \"\""
+  end
+
   config.vm.box = "debian/trixie64"
   config.vm.hostname = "atl-sh-dev"
 
@@ -14,7 +18,7 @@ Vagrant.configure("2") do |config|
     v.cpus = 4
   end
 
-  # Provision root SSH access for Ansible (uses same key as Docker setup)
+  # Provision root SSH access for Ansible
   config.vm.provision "file", source: ".ssh/dev_key.pub", destination: "/tmp/authorized_keys.pub"
   config.vm.provision "shell", inline: <<-SHELL
     mkdir -p /root/.ssh
